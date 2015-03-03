@@ -41,20 +41,6 @@ var windowHalfY = window.innerHeight / 2;
 
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-var counter = 0;
-
-var oldVector = new THREE.Vector3(0,0,0);
-
-var counterMax = 100;
-console.log(scene);
-
-var xRotate = .01;
-var zRotate = 0;
-var yRotate = 0;
-var DIFF_CONSTANT = .05;
-var TIGHTNESS = 1;
-var DELETE = true;
-
 var colors = new Array();
 
 var nextChild = 0;
@@ -62,6 +48,28 @@ var nextChild = 0;
 for(var i = 0; i < 3; i++) {
     colors.push(getRandomColor());
 }
+
+var counter = 0;
+var oldVectors = new Array();
+for(var i = 0; i < colors.length; i++) 
+    oldVectors.push(new THREE.Vector3(0,0,0));
+
+console.log(scene);
+
+var xRotate = 0.01;
+var zRotate = 0.01;
+var yRotate = 0.01;
+//How much shift there is after the circle starts to repeat from the center
+var DIFF_CONSTANT = .05;
+//Shift of each line on each tick
+var DIFF = Math.random() * 3.14;
+var TIGHTNESS = .5;
+var DELETE = false;
+var counterMax = 1000 * DIFF;
+var SYNCMUSIC = true;
+//Inverse relationship
+var DISTANCE = 1000;
+
 
 function render() {
     //Get frequency data (Still don't know what "frequency" really means in terms of an integer)
@@ -83,35 +91,44 @@ function render() {
 
     var averageFreq = sumFreq / dataArray.length;
 
-    var sphereScale = averageFreq / 32;
+    if(SYNCMUSIC)
+        sumFreq = averageFreq / 32;
+    else
+        sumFreq = 4;
 
 
     requestAnimationFrame( render );
-
+    console.log(counter);
     if(counter >= counterMax) {
         counter = counter % counterMax + DIFF_CONSTANT;
-        oldVector = new THREE.Vector3(0,0,0);
+        for(var i = 0; i < colors.length; i++) 
+            oldVectors[i] = new THREE.Vector3(0,0,0);
+        scene.children = new Array();
+        for(var i = 0; i < 3; i++)
+            colors[i] = getRandomColor();
+        DIFF = Math.random() * 3.14;
     } else {
+        for(var i = 0; i < colors.length; i++) {
+            var geometry = new THREE.Geometry();
+            var vector1 = oldVectors[i];
+            var vector2 = vector1.clone();
+            vector2.x = (vector2.x + Math.sin(counter + i) / TIGHTNESS) * counter / DISTANCE;
+            vector2.y = (vector2.y + Math.cos(counter + i) / TIGHTNESS) * counter / DISTANCE;
+            oldVectors[i] = vector2;
+            geometry.vertices.push(vector1);
+            geometry.vertices.push(vector2);
+            var material = new THREE.LineBasicMaterial({color : colors[i] });
+            var newCube = new THREE.Line(geometry, material);
+            scene.add(newCube);
+        }
 
-        var geometry = new THREE.Geometry();
-        var vector1 = oldVector;
-        var vector2 = vector1.clone();
-        vector2.x = (vector2.x + Math.sin(counter) / TIGHTNESS) * counter / counterMax;
-        vector2.y = (vector2.y + Math.cos(counter) / TIGHTNESS) * counter / counterMax;
-        oldVector = vector2;
-        geometry.vertices.push(vector1);
-        geometry.vertices.push(vector2);
-        var material = new THREE.LineBasicMaterial({color : colors[Math.floor(Math.random() * 3)] });
-        var newCube = new THREE.Line(geometry, material);
 
-
-        scene.add(newCube);
         scene.rotation.z += zRotate;
         scene.rotation.x += xRotate;
         scene.rotation.y += yRotate;
-        scene.scale.x = sphereScale;
-        scene.scale.y = sphereScale;
-        counter++;
+        scene.scale.x = sumFreq;
+        scene.scale.y = sumFreq;
+        counter += DIFF;
     }
 
     if(DELETE) {
