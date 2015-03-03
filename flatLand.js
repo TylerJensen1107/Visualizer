@@ -63,12 +63,12 @@ var yRotate = 0.01;
 var DIFF_CONSTANT = .05;
 //Shift of each line on each tick
 var DIFF = Math.random() * 3.14;
-var TIGHTNESS = .5;
+var TIGHTNESS = Math.random();
 var DELETE = false;
 var counterMax = 1000 * DIFF;
-var SYNCMUSIC = true;
+var SYNCMUSIC = false;
 //Inverse relationship
-var DISTANCE = 1000;
+var DISTANCE = 1000 * DIFF;
 
 
 function render() {
@@ -107,6 +107,8 @@ function render() {
         for(var i = 0; i < 3; i++)
             colors[i] = getRandomColor();
         DIFF = Math.random() * 3.14;
+        counterMax = 1000 * DIFF;
+        DISTANCE = 1000 * DIFF;
     } else {
         for(var i = 0; i < colors.length; i++) {
             var geometry = new THREE.Geometry();
