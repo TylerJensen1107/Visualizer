@@ -66,7 +66,7 @@ var oldVectors = new Array();
 for(var i = 0; i < colors.length; i++) 
     oldVectors.push(new THREE.Vector3(0,0,0));
 
-
+console.log(counterMax + "consoleMax");
 
 
 function render() {
@@ -103,9 +103,13 @@ function render() {
         scene.children = new Array();
         for(var i = 0; i < 3; i++)
             colors[i] = getRandomColor();
+        var oldDIff = DIFF;
         DIFF = Math.random() * 3.14;
-        counterMax = 1000 * DIFF;
+        counterMax = (counterMax/oldDIff) * DIFF;
+        console.log(DIFF + "Diff");
+
     } else {
+        console.log(counter + "Counter");
         for(var i = 0; i < colors.length; i++) {
             var geometry = new THREE.Geometry();
             var vector1 = oldVectors[i];
@@ -127,7 +131,6 @@ function render() {
         scene.scale.x = sumFreq;
         scene.scale.y = sumFreq;
         counter += DIFF;
-        console.log(DIFF);
     }
 
     if(DELETE) {
@@ -185,9 +188,7 @@ function changeVisual() {
     TIGHTNESS = document.getElementById("Tightness").value || Math.random();
     DELETE = document.getElementById("Delete").value;
     SYNCMUSIC = document.getElementById("Sync").value;
-    counterMax = document.getElementById("CounterMax").value || 1000 * DIFF;
-    console.log(DIFF);
-
+    counterMax = document.getElementById("CounterMax").value || counterMax;
     render();
     
 }
