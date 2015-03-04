@@ -90,7 +90,7 @@ function render() {
     var averageFreq = sumFreq / dataArray.length;
 
     if(SYNCMUSIC)
-        sumFreq =  4 * averageFreq / 128;
+        sumFreq =  averageFreq / 32;
     else
         sumFreq = 4;
 
