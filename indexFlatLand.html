@@ -17,7 +17,11 @@
   	<input type="button" id="start" value="Start!">
   	<input type="button" id="newShape" value="newShape">
     <input type="button" id="refresh" value="refresh">
-    <input type="file" accept="audio/*" id="file" value="Upload Song!">
+  </form>
+
+  <form action="otherMusic/process.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file">
+    <input type="submit" value="Upload" name="submit">
   </form>
    
 
