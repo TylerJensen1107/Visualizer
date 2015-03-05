@@ -28,6 +28,20 @@ song.addEventListener("canplay", function() {
     bufferLength = analyser.frequencyBinCount;
 });
 
+var file = document.getElementById("file");
+
+file.addEventListener("change", function(event) {
+    form = new FormData();
+    form.append("song", file.files[0]);
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        console.log("Upload complete.");
+    };
+    xhr.open("post", "/entryPoint", true);
+    xhr.send(form);
+
+});
+
 
 //Now set up threejs
 var scene = new THREE.Scene();
@@ -107,7 +121,6 @@ function render() {
             var oldDIff = DIFF;
             DIFF = Math.random() * 3.14;
             counterMax = (counterMax/oldDIff) * DIFF;
-            console.log(SYNCMUSIC);
             TIGHTNESS = Math.random();
         }
 
@@ -143,7 +156,6 @@ function render() {
     }
 
 
-    console.log(DIFF + "       ");
     renderer.render( scene, camera );
 
 
@@ -219,11 +231,9 @@ function startVisual() {
     if(document.getElementById("CounterMax").value) 
         counterMax = Number(document.getElementById("CounterMax").value) * DIFF;
     render();
-    console.log(document.getElementById("file").value);
-    var newSong = document.createElement("AUDIO");
-    console.log(newSong);
-    newSong.setAttribute("src", document.getElementById("file").value);
-    newSong.play();
+    song.play();
+
     
 }
+
 
