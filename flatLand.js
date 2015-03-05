@@ -37,7 +37,7 @@ file.addEventListener("change", function(event) {
     xhr.onload = function() {
         console.log("Upload complete.");
     };
-    xhr.open("post", "/entryPoint", true);
+    xhr.open("post", "/otherMusic", true);
     xhr.send(form);
 
 });
