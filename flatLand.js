@@ -26,8 +26,8 @@ song.addEventListener("canplay", function() {
     //This changes a few things, hard to describe. A higher count makes the sphere smaller and "smoother"
     analyser.fftSize = 1024;
     bufferLength = analyser.frequencyBinCount;
-    song.play();
 });
+
 
 //Now set up threejs
 var scene = new THREE.Scene();
@@ -65,8 +65,8 @@ var counter = 0;
 var oldVectors = new Array();
 for(var i = 0; i < colors.length; i++) 
     oldVectors.push(new THREE.Vector3(0,0,0));
+var test = 0;
 
-console.log(counterMax + "consoleMax");
 
 
 function render() {
@@ -103,19 +103,21 @@ function render() {
         scene.children = new Array();
         for(var i = 0; i < 3; i++)
             colors[i] = getRandomColor();
-        var oldDIff = DIFF;
-        DIFF = Math.random() * 3.14;
-        counterMax = (counterMax/oldDIff) * DIFF;
-        console.log(DIFF + "Diff");
+        if(!document.getElementById("Shape").value) {
+            var oldDIff = DIFF;
+            DIFF = Math.random() * 3.14;
+            counterMax = (counterMax/oldDIff) * DIFF;
+            console.log(SYNCMUSIC);
+            TIGHTNESS = Math.random();
+        }
 
     } else {
-        console.log(counter + "Counter");
         for(var i = 0; i < colors.length; i++) {
             var geometry = new THREE.Geometry();
             var vector1 = oldVectors[i];
             var vector2 = vector1.clone();
-            vector2.x = (vector2.x + Math.sin(counter + i) / TIGHTNESS) * counter / counterMax;
-            vector2.y = (vector2.y + Math.cos(counter + i) / TIGHTNESS) * counter / counterMax;
+            vector2.x = (vector2.x + Math.sin(counter + i) / TIGHTNESS) * counter / (1000* DIFF);
+            vector2.y = (vector2.y + Math.cos(counter + i) / TIGHTNESS) * counter / (1000* DIFF);
             oldVectors[i] = vector2;
             geometry.vertices.push(vector1);
             geometry.vertices.push(vector2);
@@ -141,7 +143,7 @@ function render() {
     }
 
 
-
+    console.log(DIFF + "       ");
     renderer.render( scene, camera );
 
 
@@ -173,23 +175,55 @@ function onDocumentMouseMove( event ) {
 
 function addListeners() {
     document.getElementById("newShape").addEventListener("click", changeShape);
-    document.getElementById("refresh").addEventListener("click", changeVisual);
+    document.getElementById("start").addEventListener("click", startVisual);
+    document.getElementById("refresh").addEventListener("click", refresh)
 }
 
 function changeShape() {
     DIFF = Math.random() * 3.14;
 }
 
-function changeVisual() {
-    xRotate = document.getElementById("xRot").value || .01;
-    yRotate = document.getElementById("yRot").value || .01;
-    zRotate = document.getElementById("zRot").value || .01;
-    DIFF = document.getElementById("Shape").value || Math.random() * 3.14;
-    TIGHTNESS = document.getElementById("Tightness").value || Math.random();
-    DELETE = document.getElementById("Delete").value;
+function refresh() {
+    if(document.getElementById("xRot").value)
+        xRotate = Number(document.getElementById("xRot").value);
+    if(document.getElementById("yRot").value)
+        yRotate = Number(document.getElementById("yRot").value);
+    if(document.getElementById("xRot").value)
+        zRotate = Number(document.getElementById("zRot").value);
+    if(document.getElementById("Shape").value)
+        DIFF = Number(document.getElementById("Shape").value);
+    if(document.getElementById("Tightness").value)
+        TIGHTNESS = Number(document.getElementById("Tightness").value);
+    if(document.getElementById("CounterMax").value)
+        counterMax = Number(document.getElementById("CounterMax").value) * DIFF;
     SYNCMUSIC = document.getElementById("Sync").value;
-    counterMax = document.getElementById("CounterMax").value || counterMax;
+    DELETE = document.getElementById("Delete").value;
+    
+}
+
+function startVisual() {
+    document.getElementById("start").disabled = true;
+    if(document.getElementById("xRot").value)
+        xRotate = Number(document.getElementById("xRot").value);
+    if(document.getElementById("yRot").value)
+        yRotate = Number(document.getElementById("yRot").value);
+    if(document.getElementById("xRot").value)
+        zRotate = Number(document.getElementById("zRot").value);
+    if(document.getElementById("Shape").value) {
+        DIFF = Number(document.getElementById("Shape").value);
+        counterMax = DIFF * 1000;
+    }
+    TIGHTNESS = Number(document.getElementById("Tightness").value) || Math.random();
+    DELETE = Number(document.getElementById("Delete").value);
+    SYNCMUSIC = Number(document.getElementById("Sync").value);
+    if(document.getElementById("CounterMax").value) 
+        counterMax = Number(document.getElementById("CounterMax").value) * DIFF;
     render();
+    console.log(document.getElementById("file").value);
+    var newSong = document.createElement("AUDIO");
+    console.log(newSong);
+    newSong.setAttribute("src", document.getElementById("file").value);
+    newSong.play();
     
 }
 
