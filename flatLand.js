@@ -38,7 +38,7 @@ file.addEventListener("change", function(event) {
         console.log("Upload complete.");
     };
     console.log(window.location.pathname);
-    xhr.open("post", "../otherMusic", true);
+    xhr.open("post", "/tylerj11/visualizer/otherMusic", true);
     xhr.send(form);
 
 });
