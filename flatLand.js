@@ -30,18 +30,18 @@ song.addEventListener("canplay", function() {
 
 var file = document.getElementById("file");
 
-file.addEventListener("change", function(event) {
-    form = new FormData();
-    form.append("song", file.files[0]);
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        console.log("Upload complete.");
-    };
-    console.log(window.location.pathname);
-    xhr.open("post", "/tylerj11/visualizer/process.php", true);
-    xhr.send(form);
+// file.addEventListener("change", function(event) {
+//     form = new FormData();
+//     form.append("song", file.files[0]);
+//     var xhr = new XMLHttpRequest();
+//     xhr.onload = function() {
+//         console.log("Upload complete.");
+//     };
+//     console.log(window.location.pathname);
+//     xhr.open("post", "/tylerj11/visualizer/process.php", true);
+//     xhr.send(form);
 
-});
+// });
 
 
 //Now set up threejs
