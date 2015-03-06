@@ -1,8 +1,8 @@
 <?php
 $target_dir = "otherMusic/";
-$target_file = $target_dir . basename($_FILES["file"]["name"]);
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
-echo $target_file;
+print_r($_FILES);
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 // Check if file already exists
 if (file_exists($target_file)) {
@@ -10,7 +10,7 @@ if (file_exists($target_file)) {
     $uploadOk = 0;
 }
 // Check file size
-if ($_FILES["file"]["size"] > 500000) {
+if ($_FILES["fileToUpload"]["size"] > 500000) {
     echo "Sorry, your file is too large.";
     $uploadOk = 0;
 }
@@ -20,7 +20,7 @@ if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
 // if everything is ok, try to upload file
 } else {
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
     } else {
         echo "Sorry, there was an error uploading your file.";
